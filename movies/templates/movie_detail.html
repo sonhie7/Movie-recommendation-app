@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ movie.TITLE }} - CINÉMA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            background-color: #1a1a1a; /* Dark background */
+            color: #e0e0e0; /* Light text */
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center content horizontally */
+        }
+        .header-nav {
+            background-color: #222222;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .header-nav .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #e0e0e0;
+            text-decoration: none;
+        }
+        .header-nav .main-nav {
+            display: flex;
+            gap: 25px;
+        }
+        .header-nav .main-nav a {
+            color: #b0b0b0;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 5px 0;
+            position: relative;
+        }
+        .header-nav .main-nav a:hover,
+        .header-nav .main-nav a.active {
+            color: #ffffff;
+        }
+        .header-nav .main-nav a.active::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 100%;
+            height: 2px;
+            background-color: #e0e0e0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px; /* Adjust max-width as needed */
+            padding: 30px 20px;
+            box-sizing: border-box;
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #007bff;
+            text-decoration: none;
+            margin-bottom: 30px;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .back-link svg {
+            color: #007bff;
+        }
+
+        .movie-detail-card {
+            background-color: #222222;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            padding: 30px;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+        .movie-detail-card .poster-wrapper {
+            flex-shrink: 0;
+        }
+        .movie-detail-card .poster {
+            width: 250px;
+            height: 375px; /* Standard movie poster aspect ratio */
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .movie-detail-card .info-content {
+            flex-grow: 1;
+        }
+        .movie-detail-card h1 {
+            font-size: 2.5em;
+            color: #ffffff;
+            margin-top: 0;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+        .movie-detail-card .meta-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 1em;
+            color: #b0b0b0;
+            margin-bottom: 20px;
+        }
+        .movie-detail-card .meta-info span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .movie-detail-card .meta-info svg {
+            color: #888;
+        }
+        .movie-detail-card .genres {
+            background-color: #007bff; /* Blue for genre tag */
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        .movie-detail-card .plot {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #c0c0c0;
+        }
+        .movie-detail-card .actors {
+            font-size: 1em;
+            color: #b0b0b0;
+            margin-bottom: 25px;
+        }
+        .movie-detail-card .actors strong {
+            color: #e0e0e0;
+        }
+
+        .actions-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            align-items: center;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background-color 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-watchlist {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-watchlist:hover {
+            background-color: #0056b3;
+        }
+        .btn-watchlist.remove {
+            background-color: #dc3545;
+        }
+        .btn-watchlist.remove:hover {
+            background-color: #c82333;
+        }
+        .btn-watchlist svg {
+            color: white;
+        }
+
+        .rating-section {
+            background-color: #2a2a2a;
+            padding: 25px;
+            border-radius: 8px;
+        }
+        .rating-section h3 {
+            font-size: 1.5em;
+            color: #ffffff;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        .current-user-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #c0c0c0;
+        }
+        .current-user-rating .stars i { /* Target Font Awesome icons */
+            color: #ffcc00; /* Yellow stars */
+        }
+        .rating-form {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .rating-form select {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background-color: #333;
+            color: #e0e0e0;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .rating-form select option {
+            background-color: #333;
+            color: #e0e0e0;
+        }
+        .rating-form button {
+            background-color: #ffcc00; /* Yellow button */
+            color: #1a1a1a;
+            font-weight: 700;
+        }
+        .rating-form button:hover {
+            background-color: #e0b800;
+        }
+
+        .error-message {
+            background-color: #dc3545;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+        .messages li {
+            padding: 12px 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .messages .success {
+            background-color: #28a745;
+            color: white;
+        }
+        .messages .error {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .logo i {
+            margin-right: 8px;
+            color: #ffcc00; /* Netflix style red 🔥 */
+        }
+        .logo1 i, .logo2 i, .logo3 i, .logo4 i {
+            margin-right: 4px;
+        }
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+        }
+
+        .movie-card {
+            background-color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .movie-card .info {
+            padding: 10px;
+        }
+
+        .movie-card .title {
+            font-weight: 600;
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+
+        /* --- Simplified Star Rating CSS --- */
+        .star-rating {
+            display: flex;
+            gap: 5px;
+            font-size: 2em; /* Make stars larger */
+            cursor: pointer;
+        }
+
+        .star-rating i {
+            color: #555; /* Default color for empty stars */
+            transition: color 0.1s ease-in-out; /* Simpler transition */
+        }
+
+        /* Filled star color (used by JS) */
+        .star-rating i.filled {
+            color: #ffcc00; /* Yellow for filled stars */
+        }
+        /* --- End Simplified Star Rating CSS --- */
+    </style>
+
+</head>
+<body>
+    <div class="header-nav">
+        <a href="{% url 'home' %}" class="logo"><i class="fa-solid fa-film"></i>CINÉMA</a>
+        <div class="main-nav">
+            <a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}">
+                Catalogue
+            </a>
+
+            {% if user_id %}
+            <a href="{% url 'profile' %}" class="logo3 {% if request.path == '/profile/' %}active{% endif %}">
+                <i class="fa-regular fa-user"></i>Mon Profil
+            </a>
+
+            <a href="{% url 'watchlist' %}" class="logo1 {% if request.path == '/watchlist/' %}active{% endif %}">
+                <i class="fa-regular fa-bookmark"></i>Watchlist
+            </a>
+
+            <a href="{% url 'trending' %}" class="logo2 {% if request.path == '/trending/' %}active{% endif %}">
+                <i class="fa-solid fa-chart-line"></i>Tendances
+            </a>
+
+            <a href="{% url 'logout' %}" class="logo4">
+                <i class="fa-solid fa-right-from-bracket"></i>Déconnexion
+            </a>
+            {% else %}
+            <a href="{% url 'login' %}">Connexion</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="container">
+        <a href="{% url 'home' %}" class="back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Retour au catalogue
+        </a>
+
+        {% if error %}
+        <div class="error-message">{{ error }}</div>
+        {% else %}
+        <div class="movie-detail-card">
+            <div class="poster-wrapper">
+                {% if details.Poster and details.Poster != "N/A" %}
+                <img src="{{ details.Poster }}" alt="Poster de {{ movie.TITLE }}" class="poster">
+                {% else %}
+                <img src="https://via.placeholder.com/250x375/333333/FFFFFF?text=No+Poster" alt="No Poster Available" class="poster">
+                {% endif %}
+            </div>
+            <div class="info-content">
+                <h1>{{ movie.TITLE }}</h1>
+                <div class="meta-info">
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        {{ movie.RELEASE_DATE }}
+                    </span>
+                    <span class="genres">{{ movie.genres }}</span>
+                </div>
+
+                {% if user_id %}
+                <div class="actions-section">
+                    {% if in_watchlist %}
+                    <a href="{% url 'remove_from_watchlist' movie.MOVIE_ID %}" class="btn btn-watchlist remove">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                        Retirer de ma liste
+                    </a>
+                    {% else %}
+                    <a href="{% url 'add_to_watchlist' movie.MOVIE_ID %}" class="btn btn-watchlist">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                        Ajouter à ma liste
+                    </a>
+                    {% endif %}
+                </div>
+
+                <div class="rating-section">
+                    <h3>Noter ce film</h3>
+
+                     {% if user_rating is not None %}
+                    <p class="current-user-rating">Votre note:
+                        <span class="stars">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= user_rating %}
+                                <i class="fa-solid fa-star"></i>
+                                {% else %}
+                                <i class="fa-regular fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                    </p>
+                    {% endif %}
+                    <form method="post" action="{% url 'rate_movie' movie.MOVIE_ID %}" class="rating-form">
+                        {% csrf_token %}
+
+                        <div class="star-rating">
+                            <input type="hidden" name="rating" id="rating-value" value="{{ user_rating|default:0 }}" required>
+
+                            <i class="fa-regular fa-star" data-value="1"></i>
+                            <i class="fa-regular fa-star" data-value="2"></i>
+                            <i class="fa-regular fa-star" data-value="3"></i>
+                            <i class="fa-regular fa-star" data-value="4"></i>
+                            <i class="fa-regular fa-star" data-value="5"></i>
+                        </div>
+
+                        <button type="submit">Noter</button>
+                    </form>
+                </div>
+                {% else %}
+                <div class="actions-section">
+                    <p><a href="{% url 'login' %}" style="color: #007bff; text-decoration: none;">Connectez-vous</a> pour noter ce film et l'ajouter à votre liste.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+
+        <div class="section-card">
+            <h2>🎬 Films similaires</h2>
+
+            {% if similar_movies %}
+            <div class="movie-grid">
+                {% for movie in similar_movies %}
+                <div class="movie-card">
+                    <a href="{% url 'movie_detail' movie.MOVIE_ID %}">
+                        {% if movie.Poster %}
+                            <img src="{{ movie.Poster }}">
+                        {% else %}
+                            <img src="https://via.placeholder.com/300x450?text=No+Poster">
+                        {% endif %}
+                    </a>
+
+                    <div class="info">
+                        <div class="title">{{ movie.TITLE }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+                <p class="empty-state">Pas de recommandations disponibles.</p>
+            {% endif %}
+        </div>
+
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+
+    <script>
+        const stars = document.querySelectorAll(".star-rating i");
+        const ratingInput = document.getElementById("rating-value");
+
+        // Initialize selectedRating based on current user_rating from Django context
+        let selectedRating = parseInt(ratingInput.value) || 0;
+
+        // Function to update star appearance
+        function updateStars(rating) {
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.remove("fa-regular");
+                    star.classList.add("fa-solid", "filled"); // Add 'filled' class for styling
+                } else {
+                    star.classList.remove("fa-solid", "filled");
+                    star.classList.add("fa-regular");
+                }
+            });
+        }
+
+        // Set initial state of stars when the page loads
+        updateStars(selectedRating);
+
+        stars.forEach((star, index) => {
+            // Hover effect
+            star.addEventListener("mouseover", () => {
+                updateStars(index + 1);
+            });
+
+            // Click → select rating
+            star.addEventListener("click", () => {
+                selectedRating = index + 1;
+                ratingInput.value = selectedRating;
+                updateStars(selectedRating); // Update the visual state
+            });
+        });
+
+        // Restore selected rating after hover when mouse leaves the rating area
+        document.querySelector(".star-rating").addEventListener("mouseleave", () => {
+            updateStars(selectedRating); // Restore to the clicked selection
+        });
+    </script>
+</body>
+</html>

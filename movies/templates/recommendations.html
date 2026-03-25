@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommandations - CINÉMA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            background-color: #1a1a1a; /* Dark background */
+            color: #e0e0e0; /* Light text */
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center content horizontally */
+        }
+        .header-nav {
+            background-color: #222222;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .header-nav .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #e0e0e0;
+            text-decoration: none;
+        }
+        .header-nav .main-nav {
+            display: flex;
+            gap: 25px;
+        }
+        .header-nav .main-nav a {
+            color: #b0b0b0;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 5px 0;
+            position: relative;
+        }
+        .header-nav .main-nav a:hover,
+        .header-nav .main-nav a.active {
+            color: #ffffff;
+        }
+        .header-nav .main-nav a.active::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 100%;
+            height: 2px;
+            background-color: #e0e0e0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px; /* Adjust max-width as needed */
+            padding: 30px 20px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+        h1 svg {
+            vertical-align: middle;
+            margin-right: 10px;
+            color: #28a745; /* Green for target icon */
+        }
+        .user-id-message {
+            font-size: 1.1em;
+            color: #b0b0b0;
+            margin-bottom: 40px;
+        }
+
+        .movie-list {
+            list-style: none;
+            padding: 0;
+        }
+        .movie-item {
+            background-color: #222222;
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s ease-in-out;
+        }
+        .movie-item:hover {
+            transform: translateY(-3px);
+        }
+        .movie-item a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 700;
+        }
+        .movie-item a:hover {
+            color: #007bff;
+            text-decoration: underline;
+        }
+        .movie-item .genres {
+            color: #b0b0b0;
+            font-size: 0.9em;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #888;
+            padding: 60px;
+            background-color: #222222;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            margin-top: 30px;
+        }
+        .empty-state p {
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .logo i {
+    margin-right: 8px;
+    color: #ffcc00; /* Netflix style red 🔥 */
+}
+.logo1 i {
+    margin-right: 4px;
+}
+.logo2 i {
+    margin-right: 4px;
+}
+.logo3 i {
+    margin-right: 4px;
+}
+.logo4 i {
+    margin-right: 4px;
+}
+    </style>
+</head>
+<body>
+    <div class="header-nav">
+        <a href="{% url 'home' %}" class="logo" ><i class="fa-solid fa-film"></i>CINÉMA</a>
+        <div class="main-nav">
+    <a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}">
+        Catalogue
+    </a>
+
+    {% if user_id %}
+    <a href="{% url 'profile' %}" class="logo3 {% if request.path == '/profile/' %}active{% endif %}">
+        <i class="fa-regular fa-user"></i>Mon Profil
+    </a>
+
+    <a href="{% url 'watchlist' %}" class="logo1 {% if request.path == '/watchlist/' %}active{% endif %}">
+        <i class="fa-regular fa-bookmark"></i>Watchlist
+    </a>
+
+    <a href="{% url 'trending' %}" class="logo2 {% if request.path == '/trending/' %}active{% endif %}">
+        <i class="fa-solid fa-chart-line"></i>Tendances
+    </a>
+
+    <a href="{% url 'logout' %}" class="logo4">
+        <i class="fa-solid fa-right-from-bracket"></i>Déconnexion
+    </a>
+    {% else %}
+    <a href="{% url 'login' %}">Connexion</a>
+    {% endif %}
+</div>
+    </div>
+    
+    <div class="container">
+        <h1>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-target"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+            Films Recommandés
+        </h1>
+        <p class="user-id-message">Recommandations pour l'utilisateur #{{ user_id }}</p>
+        
+        {% if recommendations %}
+        <ul class="movie-list">
+            {% for movie in recommendations %}
+            <li class="movie-item">
+                <a href="{% url 'movie_detail' movie.MOVIE_ID %}">{{ movie.TITLE }}</a>
+                <div class="genres">{{ movie.GENRES }}</div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class="empty-state">
+            <p>Aucune recommandation disponible.</p>
+            <p>Cet utilisateur n'a pas encore assez de notes pour obtenir des recommandations.</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

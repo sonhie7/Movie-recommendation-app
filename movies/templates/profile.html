@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil - CINÉMA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            background-color: #1a1a1a; /* Dark background */
+            color: #e0e0e0; /* Light text */
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center content horizontally */
+        }
+        .header-nav {
+            background-color: #222222;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .header-nav .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #e0e0e0;
+            text-decoration: none;
+        }
+        .header-nav .main-nav {
+            display: flex;
+            gap: 25px;
+        }
+        .header-nav .main-nav a {
+            color: #b0b0b0;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 5px 0;
+            position: relative;
+        }
+        .header-nav .main-nav a:hover,
+        .header-nav .main-nav a.active {
+            color: #ffffff;
+        }
+        .header-nav .main-nav a.active::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 100%;
+            height: 2px;
+            background-color: #e0e0e0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px; /* Adjust max-width as needed */
+            padding: 30px 20px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+        h1 svg {
+            vertical-align: middle;
+            margin-right: 10px;
+            color: #007bff;
+        }
+        .welcome-message {
+            font-size: 1.1em;
+            color: #b0b0b0;
+            margin-bottom: 40px;
+        }
+
+        .section-card {
+            background-color: #222222;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+        .section-card h2 {
+            font-size: 1.8em;
+            color: #ffffff;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+        .section-card h2 svg {
+            vertical-align: middle;
+            margin-right: 10px;
+            color: #ffcc00; /* Yellow for stars */
+        }
+        .section-card h2.watchlist-icon svg {
+             color: #007bff; /* Blue for watchlist */
+        }
+         .section-card h2.recommendations-icon svg {
+             color: #28a745; /* Green for recommendations */
+        }
+
+        .movie-list {
+            list-style: none;
+            padding: 0;
+        }
+        .movie-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #333;
+        }
+        .movie-item:last-child {
+            border-bottom: none;
+        }
+        .movie-item a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        .movie-item a:hover {
+            color: #007bff;
+            text-decoration: underline;
+        }
+        .movie-item .rating-stars {
+            display: flex;
+            gap: 2px;
+        }
+        .movie-item .rating-stars svg {
+            color: #ffcc00; /* Yellow stars */
+        }
+        .movie-item .genres-text {
+            color: #b0b0b0;
+            font-size: 0.9em;
+        }
+
+        .empty-state {
+            color: #888;
+            font-style: italic;
+            text-align: center;
+            padding: 20px 0;
+        }
+        .empty-state .btn-browse {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            margin-top: 20px;
+            display: inline-block;
+        }
+        .empty-state .btn-browse:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-remove {
+            background-color: #dc3545;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .btn-remove:hover {
+            background-color: #c82333;
+        }
+
+        .logo i {
+    margin-right: 8px;
+    color: #ffcc00; /* Netflix style red 🔥 */
+}
+.logo1 i {
+    margin-right: 4px;
+}
+.logo2 i {
+    margin-right: 4px;
+}
+.logo3 i {
+    margin-right: 4px;
+}
+.logo4 i {
+    margin-right: 4px;
+}
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 25px;
+}
+
+.movie-card {
+    background-color: #222;
+    border-radius: 10px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s;
+}
+
+.movie-card:hover {
+    transform: translateY(-5px);
+}
+
+.movie-card img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.movie-card .info {
+    padding: 10px;
+}
+
+.movie-card .title {
+    font-weight: 600;
+    font-size: 1em;
+    margin-bottom: 10px;
+}
+
+.btn-remove {
+    display: block;
+    text-align: center;
+    background-color: #dc3545;
+    color: white;
+    padding: 8px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.85em;
+}
+.scroll-row {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.scroll-row::-webkit-scrollbar {
+    height: 6px;
+}
+
+.scroll-row::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 10px;
+}
+
+.scroll-row .movie-card {
+    min-width: 180px;
+    flex-shrink: 0;
+}
+.movie-card:hover {
+    transform: scale(1.05);
+}
+.movie-card img {
+    width: 100%;
+    height: 300px;
+    object-fit: contain;   /* 🔥 this fixes wide/stretch issue */
+    border-radius: 8px;
+}
+    </style>
+</head>
+<body>
+    <div class="header-nav">
+        <a href="{% url 'home' %}" class="logo" ><i class="fa-solid fa-film"></i>CINÉMA</a>
+        <div class="main-nav">
+    <a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}">
+        Catalogue
+    </a>
+
+    {% if user_id %}
+    <a href="{% url 'profile' %}" class="logo3 {% if request.path == '/profile/' %}active{% endif %}">
+        <i class="fa-regular fa-user"></i>Mon Profil
+    </a>
+
+    <a href="{% url 'watchlist' %}" class="logo1 {% if request.path == '/watchlist/' %}active{% endif %}">
+        <i class="fa-regular fa-bookmark"></i>Watchlist
+    </a>
+
+    <a href="{% url 'trending' %}" class="logo2 {% if request.path == '/trending/' %}active{% endif %}">
+        <i class="fa-solid fa-chart-line"></i>Tendances
+    </a>
+
+    <a href="{% url 'logout' %}" class="logo4">
+        <i class="fa-solid fa-right-from-bracket"></i>Déconnexion
+    </a>
+    {% else %}
+    <a href="{% url 'login' %}">Connexion</a>
+    {% endif %}
+</div>
+    </div>
+    
+    <div class="container">
+        <h1>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            Mon Profil
+        </h1>
+        <p class="welcome-message">Bienvenue, utilisateur #{{ user_id }}</p>
+        
+        <div class="section-card">
+    <h2>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+        Mes Notes
+    </h2>
+
+    {% if rated_movies %}
+    <div class="scroll-row">
+        {% for movie in rated_movies %}
+        <div class="movie-card">
+            <a href="{% url 'movie_detail' movie.MOVIE_ID %}">
+                {% if movie.Poster %}
+                    <img src="{{ movie.Poster }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/300x450?text=No+Poster">
+                {% endif %}
+            </a>
+
+            <div class="info">
+                <div class="title">{{ movie.TITLE }}</div>
+
+                <div style="color:#ffcc00;">
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= movie.rating %}
+                            ★
+                        {% else %}
+                            ☆
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-state">Vous n'avez pas encore noté de films.</p>
+    {% endif %}
+</div>
+        
+        <div class="section-card">
+            <h2 class="watchlist-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                Ma Liste à Voir
+            </h2>
+            {% if watchlist %}
+            <div class="movie-grid">
+    {% for movie in watchlist %}
+    <div class="movie-card">
+        <a href="{% url 'movie_detail' movie.MOVIE_ID %}">
+            {% if movie.Poster %}
+                <img src="{{ movie.Poster }}">
+            {% else %}
+                <img src="https://via.placeholder.com/300x450?text=No+Poster">
+            {% endif %}
+        </a>
+
+        <div class="info">
+            <div class="title">{{ movie.TITLE }}</div>
+            <a href="{% url 'remove_from_watchlist' movie.MOVIE_ID %}" class="btn-remove">
+                Retirer
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+            {% else %}
+            <div class="empty-state">
+                <p>Votre liste à voir est vide.</p>
+                <a href="{% url 'home' %}" class="btn-browse">Parcourir les films</a>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="section-card">
+            <h2 class="recommendations-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-target"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                Recommandations pour Vous
+            </h2>
+            {% if recommendations %}
+            <div class="movie-grid">
+    {% for movie in recommendations %}
+    <div class="movie-card">
+        <a href="{% url 'movie_detail' movie.MOVIE_ID %}">
+            {% if movie.Poster %}
+                <img src="{{ movie.Poster }}">
+            {% else %}
+                <img src="https://via.placeholder.com/300x450?text=No+Poster">
+            {% endif %}
+        </a>
+
+        <div class="info">
+            <div class="title">{{ movie.TITLE }}</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+            {% else %}
+            <p class="empty-state">Notez plus de films pour obtenir des recommandations personnalisées!</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

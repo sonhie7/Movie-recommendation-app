@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tendances - CINÉMA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            background-color: #1a1a1a; /* Dark background */
+            color: #e0e0e0; /* Light text */
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center content horizontally */
+        }
+        .header-nav {
+            background-color: #222222;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .header-nav .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #e0e0e0;
+            text-decoration: none;
+        }
+        .header-nav .main-nav {
+            display: flex;
+            gap: 25px;
+        }
+        .header-nav .main-nav a {
+            color: #b0b0b0;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 5px 0;
+            position: relative;
+        }
+        .header-nav .main-nav a:hover,
+        .header-nav .main-nav a.active {
+            color: #ffffff;
+        }
+        .header-nav .main-nav a.active::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 100%;
+            height: 2px;
+            background-color: #e0e0e0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px; /* Adjust max-width as needed */
+            padding: 30px 20px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+        h1 svg {
+            vertical-align: middle;
+            margin-right: 10px;
+            color: #ffcc00; /* Yellow for stats icon */
+        }
+        .subtitle {
+            font-size: 1.1em;
+            color: #b0b0b0;
+            margin-bottom: 40px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        .stat-card {
+            background-color: #222222;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        .stat-card .value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #007bff; /* Blue for values */
+            margin-bottom: 5px;
+        }
+        .stat-card .label {
+            font-size: 1em;
+            color: #b0b0b0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .chart-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Adjust ratio for bar and pie chart */
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+        .chart-card {
+            background-color: #222222;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .chart-card h2 {
+            font-size: 1.5em;
+            color: #ffffff;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .chart-card.top-movies {
+            grid-column: span 1; /* For larger screens, occupies 2/3 width */
+        }
+        .chart-card.genre-distribution {
+            grid-column: span 1; /* For larger screens, occupies 1/3 width */
+        }
+
+        @media (max-width: 768px) {
+            .chart-section {
+                grid-template-columns: 1fr; /* Stack charts on smaller screens */
+            }
+        }
+
+        .logo i {
+    margin-right: 8px;
+    color: #ffcc00; /* Netflix style red 🔥 */
+}
+.logo1 i {
+    margin-right: 4px;
+}
+.logo2 i {
+    margin-right: 4px;
+}
+.logo3 i {
+    margin-right: 4px;
+}
+.logo4 i {
+    margin-right: 4px;
+}
+    </style>
+</head>
+<body>
+    <div class="header-nav">
+        <a href="{% url 'home' %}" class="logo" ><i class="fa-solid fa-film"></i>CINÉMA</a>
+        <div class="main-nav">
+    <a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}">
+        Catalogue
+    </a>
+
+    {% if user_id %}
+    <a href="{% url 'profile' %}" class="logo3 {% if request.path == '/profile/' %}active{% endif %}">
+        <i class="fa-regular fa-user"></i>Mon Profil
+    </a>
+
+    <a href="{% url 'watchlist' %}" class="logo1 {% if request.path == '/watchlist/' %}active{% endif %}">
+        <i class="fa-regular fa-bookmark"></i>Watchlist
+    </a>
+
+    <a href="{% url 'trending' %}" class="logo2 {% if request.path == '/trending/' %}active{% endif %}">
+        <i class="fa-solid fa-chart-line"></i>Tendances
+    </a>
+
+    <a href="{% url 'logout' %}" class="logo4">
+        <i class="fa-solid fa-right-from-bracket"></i>Déconnexion
+    </a>
+    {% else %}
+    <a href="{% url 'login' %}">Connexion</a>
+    {% endif %}
+</div>
+    </div>
+    
+    <div class="container">
+        <h1>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            Tendances
+        </h1>
+        <p class="subtitle">Statistiques et analytics du catalogue</p>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="value">{{ total_ratings }}</div>
+                <div class="label">Films notés</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">{{ avg_rating }}/5</div>
+                <div class="label">Note moyenne</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">{{ top_genre }}</div>
+                <div class="label">Genre favori</div>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <div class="chart-card top-movies">
+                <h2>TOP 10 – MEILLEURES NOTES</h2>
+                <canvas id="ratingChart"></canvas>
+            </div>
+            <div class="chart-card genre-distribution">
+                <h2>RÉPARTITION PAR GENRE</h2>
+                <canvas id="genreChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ratingData = {{ rating_data|safe }};
+        const genreData = {{ genre_data|safe }};    
+
+        // Top movies
+        new Chart(document.getElementById('ratingChart'), {
+            type: 'bar',
+            data: {
+                labels: ratingData.labels,
+                datasets: [{
+                    label: 'Note Moyenne',
+                    data: ratingData.values,
+                    backgroundColor: '#ffcc00', /* Yellow bars */
+                    borderColor: '#ffcc00',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                indexAxis: 'y', // Horizontal bars
+                plugins: {
+                    legend: {
+                        display: false // Hide legend
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 5,
+                        ticks: {
+                            color: '#e0e0e0' // Axis label color
+                        },
+                        grid: {
+                            color: '#333' // Grid line color
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: '#e0e0e0' // Axis label color
+                        },
+                        grid: {
+                            color: '#333' // Grid line color
+                        }
+                    }
+                }
+            }
+        });
+
+        // Genres
+        new Chart(document.getElementById('genreChart'), {
+            type: 'pie',
+            data: {
+                labels: genreData.labels,
+                datasets: [{
+                    data: genreData.values,
+                    backgroundColor: [
+                        '#007bff', '#28a745', '#dc3545', '#ffc100', '#6f42c1', '#17a2b8', '#fd7e14', '#e83e8c', '#6c757d', '#f8f9fa', '#6610f2', '#20c997'
+                    ],
+                    borderColor: '#222222', // Border color same as card background
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            color: '#e0e0e0' // Legend label color
+                        }
+                    }
+                }
+            }
+        });
+    });
+    </script>
+
+    
+</body>
+</html>
